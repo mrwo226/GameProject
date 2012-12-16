@@ -49,6 +49,43 @@ namespace WindowsGame1
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            foreach (GameComponent component in components)
+                if (component.Enabled == true)
+                    component.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+            foreach (GameComponent component in components)
+                if (component is DrawableGameComponent && ((DrawableGameComponent)component).Visible) 
+                    ((DrawableGameComponent)component).Draw(gameTime);
+        }
+
+        // This function activates the screen so that it is visible and the user can interact with it.
+        public virtual void Show()
+        {
+            this.Visible = true;
+            this.Enabled = true;
+            foreach (GameComponent component in components)
+            {
+                component.Enabled = true;
+                if (component is DrawableGameComponent)
+                    ((DrawableGameComponent)component).Visible = true;
+            }
+        }
+
+        // This function deactivates the screen.
+        public virtual void Hide()
+        {
+            this.Visible = false;
+            this.Enabled = false;
+            foreach (GameComponent component in components)
+            {
+                component.Enabled = false;
+                if (component is DrawableGameComponent)
+                    ((DrawableGameComponent)component).Visible = false;
+            }
         }
     }
 }

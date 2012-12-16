@@ -17,19 +17,38 @@ namespace WindowsGame1
     /// </summary>
     public class MenuComponent : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        string[] menuItems;
-        int selectedIndex;
+        string[] menuItems; // The array holding the menu options.
+        int selectedIndex; // The option that is currently selected.
 
-        Color normal = Color.White;
-        Color highlight = Color.Turquoise;
+        Color normal = Color.White; // The default color for the text.
+        Color highlight = Color.Turquoise;  // The color the text is when an option is selected.
 
-        SpriteBatch spriteBatch;
-        SpriteFont spriteFont;
+        SpriteBatch spriteBatch; // Used for rendering the menu.
+        SpriteFont spriteFont; // Holds data for the font used.
 
+        // Where the menu is located on the game screen.
         Vector2 position;
-        float width = 0f;
-        float height = 0f;
+        public Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
 
+        // The width of the menu.
+        float width = 0f;
+        public float Width
+        {
+            get { return width; }
+        }
+
+        // The height of the menu.
+        float height = 0f;
+        public float Height
+        {
+            get { return height; }
+        }
+
+        // Methods to get and set the selected option.  
         public int SelectedIndex
         {
             get { return selectedIndex; }
@@ -43,6 +62,7 @@ namespace WindowsGame1
             }
         }
 
+        // The constructor for the menu component.
         public MenuComponent(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont, string[] menuItems)
             : base(game)
         {
@@ -52,21 +72,45 @@ namespace WindowsGame1
             MeasureMenu();
         }
 
+        // This function determines the dimensions of the menu, namely the initial position of it's location.
         private void MeasureMenu()
         {
+            // The height and width of the menu is set to zero by default.
             height = 0;
             width = 0;
+            spriteFont.LineSpacing = 80; // The padding in between line of text is 80 pixels by default.
 
-            foreach (string item in menuItems)
+            // Measuring code for the Start Menu.
+            if (menuItems[0] == "New Game")
             {
-                Vector2 size = spriteFont.MeasureString(item);
-                if (size.X > width)
-                    width = size.X;
-                height += spriteFont.LineSpacing + 5;
+                foreach (string item in menuItems)
+                {
+                    Vector2 size = spriteFont.MeasureString(item);
+                    if (size.X > width)
+                        width = size.X;
+                    height += spriteFont.LineSpacing + 15;
+                }
+                // The menu is located in the lower right hand corner, which is roughly one-fourth of the width of the game screen and roughly three-fourths
+                // the height of the game screen.
+                position = new Vector2((Game.Window.ClientBounds.Width - width) / 4 - 25,
+                                        3 * (Game.Window.ClientBounds.Height - height) / 4 + 65);
             }
-
-            position = new Vector2((Game.Window.ClientBounds.Width - width) / 2,
-                                    (Game.Window.ClientBounds.Height - height) / 2);
+            
+            // Measuring code for the Pause Menu.
+            else if (menuItems[0] == "Resume")
+            {
+                foreach (string item in menuItems)
+                {
+                    Vector2 size = spriteFont.MeasureString(item);
+                    if (size.X > width)
+                        width = size.X;
+                    height += spriteFont.LineSpacing + 15;
+                }
+                // Horizontally, the menu is located exactly in the center of the screen.  Vertically, it is roughly in the center.
+                position = new Vector2((Game.Window.ClientBounds.Width - width) / 2,
+                                        (Game.Window.ClientBounds.Height - height) / 2 + 85);
+            }
+            
         }
 
         /// <summary>
@@ -75,8 +119,6 @@ namespace WindowsGame1
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-
             base.Initialize();
         }
 
@@ -86,13 +128,15 @@ namespace WindowsGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            if (InputManager.IsActionPressed(InputManager.Action.CursorDown))
+            // If the player scrolls down, move to the next index.  If at the end of the array, move back to the beginning.
+            if (InputManager.IsActionTriggered(InputManager.Action.CursorDown))
             {
                 selectedIndex++;
                 if (selectedIndex == menuItems.Length)
                     selectedIndex = 0;
             }
-            else if (InputManager.IsActionPressed(InputManager.Action.CursorUp))
+            // If the player scrolls up, move back to the last index.  If at the beginning of the array, move to the end.
+            else if (InputManager.IsActionTriggered(InputManager.Action.CursorUp))
             {
                 selectedIndex--;
                 if (selectedIndex < 0)
@@ -105,17 +149,29 @@ namespace WindowsGame1
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-            Vector2 location = position;
+            Vector2 location = position; // The location of the menu starts at the initial position.
             Color tint;
 
+            // Draw every menu option on the screen.
             for (int i = 0; i < menuItems.Length; i++)
             {
+                // If an option is selected, highlight it.
                 if (i == selectedIndex)
                     tint = highlight;
                 else
                     tint = normal;
+
+                // Measure the width of the current text and center it on the menu.
+                Vector2 textDimension = spriteFont.MeasureString(menuItems[i]);
+                location.X = (float)(position.X + width/2 - textDimension.X / 2);
+
+                // Draw the text to the screen and then update the vertical position for the next line in the array.
                 spriteBatch.DrawString(spriteFont, menuItems[i], location, tint);
-                location.Y += spriteFont.LineSpacing + 5;
+                if (menuItems[0] == "New Game")
+                    location.Y += spriteFont.LineSpacing + 5;
+                else if (menuItems[0] == "Resume")
+                    location.Y += spriteFont.LineSpacing + 12;
+
             }
         }
     }

@@ -19,11 +19,17 @@ namespace WindowsGame1
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        MenuComponent menuComponent;
+        GameScreen activeScreen; // Holds the current screen.
+        StartScreen startScreen; // The start menu.
+        ActionScreen actionScreen; // The screen where most of the gameplay occurs.
+        SplashScreen splashScreen; // The loading screen.
+        PauseScreen pauseScreen; // The pause menu.
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
+            // The preferred resolution is 1280x720.
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
@@ -49,11 +55,32 @@ namespace WindowsGame1
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            string[] menuItems = { "Start Game", "High Scores", "End Game" };
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            menuComponent = new MenuComponent(this, spriteBatch, Content.Load<SpriteFont>("menufont"), menuItems);
-            Components.Add(menuComponent);
-            // TODO: use this.Content to load your game content here
+            
+            // Load the content for the start screen, add it to the components, and hide it.
+            startScreen = new StartScreen(this, spriteBatch, Content.Load<SpriteFont>("menufont"), Content.Load<Texture2D>("StartScreen"));
+            Components.Add(startScreen);
+            startScreen.Hide();
+
+            // Load the content for the loading screen.
+            splashScreen = new SplashScreen(this, spriteBatch, Content.Load<Texture2D>("SampleSplashScreen"));
+            Components.Add(splashScreen);
+            splashScreen.Hide();
+
+            // Load the content for the action screen, where most of the gameplay will occur.
+            actionScreen = new ActionScreen(this, spriteBatch);
+            Components.Add(actionScreen);
+            actionScreen.Hide();
+
+            // Load the content for the pause screen.
+            pauseScreen = new PauseScreen(this, spriteBatch, Content.Load<SpriteFont>("menufont"), Content.Load<Texture2D>("PauseScreen"));
+            Components.Add(pauseScreen);
+            pauseScreen.Hide();
+
+            // When the game starts, the active screen is the start screen.
+            activeScreen = startScreen;
+            activeScreen.Show();
+            
         }
 
         /// <summary>
@@ -75,10 +102,99 @@ namespace WindowsGame1
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            
+            // Update the input.
             InputManager.Update();
 
+            // Connects to functions that handle whichever screen is active.
+            if (activeScreen == startScreen)
+            {
+               HandleStartScreen();
+            }
+
+            else if (activeScreen == actionScreen)
+            {
+               HandleActionScreen();
+            }
+
+            else if (activeScreen == pauseScreen)
+            {
+               HandlePauseScreen();
+            }
+
             base.Update(gameTime);
+        }
+
+        // This function handles the start screen.
+        private void HandleStartScreen()
+        {
+            // If the user selects the first option (New Game), then the action screen is loaded.  If the second option is selected, the load game screen
+            // is activated (not yet implemented).  If the third option is selected, the game exits.
+            if (InputManager.IsActionTriggered(InputManager.Action.Ok))
+            {
+                if (startScreen.SelectedIndex == 0)
+                {
+                    activeScreen.Hide();
+                    activeScreen = actionScreen;
+                    activeScreen.Show();
+                }
+                //if (startScreen.SelectedIndex == 1)
+                //{
+                //    activeScreen.Hide();
+                //    activeScreen = loadGameScreen;
+                //    activeScreen.Show();
+                //}
+                if (startScreen.SelectedIndex == 2)
+                    this.Exit();
+            }
+        }
+
+        // This function handles the action screen.
+        private void HandleActionScreen()
+        {
+            // If the user presses escape, the pause menu is activated.
+            if (InputManager.IsActionTriggered(InputManager.Action.Pause))
+            {
+                activeScreen.Hide();
+                activeScreen = pauseScreen;
+                activeScreen.Show();
+            }
+        }
+
+        // This function handles the pause screen.
+        private void HandlePauseScreen()
+        {
+            if (InputManager.IsActionTriggered(InputManager.Action.Ok))
+            {
+                // Resumes the game.
+                if (pauseScreen.SelectedIndex == 0)
+                {
+                    activeScreen.Hide();
+                    activeScreen = actionScreen;
+                    activeScreen.Show();
+                }
+                // Activates the stats screen so the user can see items, abilities, etc.  (Not implemented)
+                //if (pauseScreen.SelectedIndex == 1)
+                //{
+                //    activeScreen.Hide();
+                //    activeScreen = statsScreen;
+                //    activeScreen.Show();
+                //}
+                // Activates the save screen so the user can save the game. (Not implemented)
+                //if (pauseScreen.SelectedIndex == 2)
+                //{
+                //    activeScreen.Hide();
+                //    activeScreen = saveScreen;
+                //    activeScreen.Show();
+                //}
+                // Exits to the main menu.
+                else if (pauseScreen.SelectedIndex == 3)
+                {
+                    activeScreen.Hide();
+                    activeScreen = startScreen;
+                    activeScreen.Show();
+                }
+            }
         }
 
         /// <summary>

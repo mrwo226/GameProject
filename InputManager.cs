@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Input manager.
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -14,7 +15,7 @@ namespace WindowsGame1
         {
             Ok,
             Back,
-            CharacterManagement,
+            Pause,
             ExitGame,
             MoveCharacterUp,
             MoveCharacterDown,
@@ -30,7 +31,7 @@ namespace WindowsGame1
         {
             "Ok",
             "Back",
-            "Character Management",
+            "Pause",
             "Exit Game",
             "Move Character - Up",
             "Move Character - Down",
@@ -105,10 +106,10 @@ namespace WindowsGame1
             actionMaps[(int)Action.Ok].keyboardKeys.Add(Keys.Enter);
 
             actionMaps[(int)Action.Back] = new ActionMap();
-            actionMaps[(int)Action.Back].keyboardKeys.Add(Keys.Escape);
+            actionMaps[(int)Action.Back].keyboardKeys.Add(Keys.Back);
 
-            actionMaps[(int)Action.CharacterManagement] = new ActionMap();
-            actionMaps[(int)Action.CharacterManagement].keyboardKeys.Add(Keys.Space);
+            actionMaps[(int)Action.Pause] = new ActionMap();
+            actionMaps[(int)Action.Pause].keyboardKeys.Add(Keys.Escape);
 
             actionMaps[(int)Action.ExitGame] = new ActionMap();
             actionMaps[(int)Action.ExitGame].keyboardKeys.Add(Keys.Escape);
