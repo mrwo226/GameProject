@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using XnaActionLibrary;
 
 
 namespace WindowsGame1
@@ -80,35 +81,35 @@ namespace WindowsGame1
             width = 0;
             spriteFont.LineSpacing = 80; // The padding in between line of text is 80 pixels by default.
 
-            // Measuring code for the Start Menu.
+            // A for loop checks the width of every line of text in the menu.  It then sets the width of the menu to be equal to the longest line.
+            foreach (string item in menuItems)
+            {
+                Vector2 size = spriteFont.MeasureString(item);
+                if (size.X > width)
+                    width = size.X;
+                height += spriteFont.LineSpacing + 15;
+            }
+
+            // The start menu is located in the lower right hand corner, which is roughly one-fourth of the width of the game screen and roughly three-fourths
+            // the height of the game screen.
             if (menuItems[0] == "New Game")
             {
-                foreach (string item in menuItems)
-                {
-                    Vector2 size = spriteFont.MeasureString(item);
-                    if (size.X > width)
-                        width = size.X;
-                    height += spriteFont.LineSpacing + 15;
-                }
-                // The menu is located in the lower right hand corner, which is roughly one-fourth of the width of the game screen and roughly three-fourths
-                // the height of the game screen.
                 position = new Vector2((Game.Window.ClientBounds.Width - width) / 4 - 25,
                                         3 * (Game.Window.ClientBounds.Height - height) / 4 + 65);
             }
-            
-            // Measuring code for the Pause Menu.
+
+            // Horizontally, the pause menu is located exactly in the center of the screen.  Vertically, it is roughly in the center.
             else if (menuItems[0] == "Resume")
             {
-                foreach (string item in menuItems)
-                {
-                    Vector2 size = spriteFont.MeasureString(item);
-                    if (size.X > width)
-                        width = size.X;
-                    height += spriteFont.LineSpacing + 15;
-                }
-                // Horizontally, the menu is located exactly in the center of the screen.  Vertically, it is roughly in the center.
                 position = new Vector2((Game.Window.ClientBounds.Width - width) / 2,
                                         (Game.Window.ClientBounds.Height - height) / 2 + 85);
+            }
+            // The quit menus is located exactly in the center of the screen
+            else if (menuItems[0] == "Yes")
+            {
+                // The menu is located roughly in the center of the screen.
+                position = new Vector2((Game.Window.ClientBounds.Width - width) / 2 - 150,
+                                        (Game.Window.ClientBounds.Height - height) / 2 + 125);
             }
             
         }
@@ -161,16 +162,21 @@ namespace WindowsGame1
                 else
                     tint = normal;
 
-                // Measure the width of the current text and center it on the menu.
-                Vector2 textDimension = spriteFont.MeasureString(menuItems[i]);
-                location.X = (float)(position.X + width/2 - textDimension.X / 2);
+                // If the menu is vertical, measure the width of the current text and center it.
+                if (menuItems[0] != "Yes")
+                {
+                    Vector2 textDimension = spriteFont.MeasureString(menuItems[i]);
+                    location.X = (float)(position.X + width / 2 - textDimension.X / 2);
+                }
 
-                // Draw the text to the screen and then update the vertical position for the next line in the array.
+                // Draw the text to the screen and then update the vertical and/or horizontal position for the next line in the array.
                 spriteBatch.DrawString(spriteFont, menuItems[i], location, tint);
                 if (menuItems[0] == "New Game")
                     location.Y += spriteFont.LineSpacing + 5;
                 else if (menuItems[0] == "Resume")
                     location.Y += spriteFont.LineSpacing + 12;
+                else if (menuItems[0] == "Yes")
+                    location.X += spriteFont.LineSpacing + 220;
 
             }
         }
