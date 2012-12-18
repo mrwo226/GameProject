@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using WindowsGame1.GameScreens;
 using XnaActionLibrary;
 
 namespace WindowsGame1
@@ -17,8 +18,14 @@ namespace WindowsGame1
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        #region Graphics
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        #endregion
+
+        #region Game Screens
 
         GameScreen activeScreen; // Holds the current screen.
         StartScreen startScreen; // The start menu.
@@ -26,7 +33,12 @@ namespace WindowsGame1
         SplashScreen splashScreen; // The loading screen.
         PauseScreen pauseScreen; // The pause menu.
         QuitScreen quitScreen; // The message asking if the user is sure he/she wants to quit.
-        Texture2D tilesetTexture;
+
+        public Rectangle screenRectangle;
+
+        #endregion
+
+        #region Constructor
 
         public Game1()
         {
@@ -35,8 +47,14 @@ namespace WindowsGame1
             // The preferred resolution is 1280x720.
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+
+            // Sets the content manager for the game.
             Content.RootDirectory = "Content";
         }
+
+        #endregion
+
+        #region Initialization
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -46,10 +64,15 @@ namespace WindowsGame1
         /// </summary>
         protected override void Initialize()
         {
+            // Initialize the Input Manager.
             InputManager.Initialize();
-
+            screenRectangle = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             base.Initialize();
         }
+
+        #endregion
+
+        #region Loading and Unloading Content
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -59,9 +82,6 @@ namespace WindowsGame1
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            tilesetTexture = new Texture2D(GraphicsDevice, 256, 256);
-            tilesetTexture = Content.Load<Texture2D>("Tilesets/tileset1");
             
             // Load the content for the start screen, add it to the components, and hide it.
             startScreen = new StartScreen(this, spriteBatch, Content.Load<SpriteFont>("menufont"), Content.Load<Texture2D>("Menus/StartScreen"));
@@ -74,24 +94,23 @@ namespace WindowsGame1
             splashScreen.Hide();
 
             // Load the content for the action screen, where most of the gameplay will occur.
-            actionScreen = new ActionScreen(this, spriteBatch, tilesetTexture);
+            actionScreen = new ActionScreen(this, spriteBatch);
             Components.Add(actionScreen);
             actionScreen.Hide();
 
             // Load the content for the pause screen.
-            pauseScreen = new PauseScreen(this, spriteBatch, Content.Load<SpriteFont>("menufont"), Content.Load<Texture2D>("Menus/PauseScreen"));
+            pauseScreen = new PauseScreen(this, spriteBatch, Content.Load<SpriteFont>("menufont"), Content.Load<Texture2D>("Menus/PauseScreen"), actionScreen);
             Components.Add(pauseScreen);
             pauseScreen.Hide();
 
             // Load the content for the quit screen.
-            quitScreen = new QuitScreen(this, spriteBatch, Content.Load<SpriteFont>("menufont"), Content.Load<Texture2D>("Menus/QuitScreen"));
+            quitScreen = new QuitScreen(this, spriteBatch, Content.Load<SpriteFont>("menufont"), Content.Load<Texture2D>("Menus/QuitScreen"), actionScreen);
             Components.Add(quitScreen);
             quitScreen.Hide();
 
             // When the game starts, the active screen is the start screen.
             activeScreen = startScreen;
             activeScreen.Show();
-            
         }
 
         /// <summary>
@@ -100,8 +119,12 @@ namespace WindowsGame1
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            Content.Unload();
         }
+
+        #endregion
+
+        #region Update
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -140,6 +163,10 @@ namespace WindowsGame1
 
             base.Update(gameTime);
         }
+
+        #endregion
+
+        #region Screen Management
 
         // This function handles the start screen.
         private void HandleStartScreen()
@@ -182,57 +209,46 @@ namespace WindowsGame1
         {
             if (InputManager.IsActionTriggered(InputManager.Action.Ok))
             {
+                activeScreen.Hide();
+
                 // Resumes the game.
                 if (pauseScreen.SelectedIndex == 0)
-                {
-                    activeScreen.Hide();
                     activeScreen = actionScreen;
-                    activeScreen.Show();
-                }
                 // Activates the stats screen so the user can see items, abilities, etc.  (Not implemented)
                 //if (pauseScreen.SelectedIndex == 1)
-                //{
-                //    activeScreen.Hide();
                 //    activeScreen = statsScreen;
-                //    activeScreen.Show();
-                //}
                 // Activates the save screen so the user can save the game. (Not implemented)
                 //if (pauseScreen.SelectedIndex == 2)
-                //{
-                //    activeScreen.Hide();
                 //    activeScreen = saveScreen;
-                //    activeScreen.Show();
-                //}
                 // Initializes the quit screen.
                 else if (pauseScreen.SelectedIndex == 3)
-                {
-                    activeScreen.Hide();
                     activeScreen = quitScreen;
-                    activeScreen.Show();
-                }
+                
+                activeScreen.Show();
             }
         }
 
+        // This function handles the quit screen.
         private void HandleQuitScreen()
         {
             if (InputManager.IsActionTriggered(InputManager.Action.Ok))
             {
+                activeScreen.Hide();
+                
                 // Exits to the main menu.
                 if (quitScreen.SelectedIndex == 0)
-                {
-                    activeScreen.Hide();
                     activeScreen = startScreen;
-                    activeScreen.Show();
-                }
                 // Goes back to the pause menu
                 if (quitScreen.SelectedIndex == 1)
-                {
-                    activeScreen.Hide();
                     activeScreen = pauseScreen;
-                    activeScreen.Show();
-                }
+                
+                activeScreen.Show();
             }
         }
+
+        #endregion
+
+        #region Draw
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -245,5 +261,7 @@ namespace WindowsGame1
             base.Draw(gameTime);
             spriteBatch.End();
         }
+
+        #endregion
     }
 }

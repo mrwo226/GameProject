@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework;
 
 namespace XnaActionLibrary.TileEngine
 {
+    /// <summary>
+    /// Holds information about the tiles used in the game.  The tiles are 32x32.
+    /// </summary>
     public class Engine
     {
         #region Field Region
@@ -38,6 +41,11 @@ namespace XnaActionLibrary.TileEngine
 
         #region Methods
 
+        /// <summary>
+        /// Gets a particular position on the game screen in tiles.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public static Point VectorToCell(Vector2 position)
         {
             return new Point((int)position.X / tileWidth, (int)position.Y / tileHeight);

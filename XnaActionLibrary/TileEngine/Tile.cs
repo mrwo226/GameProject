@@ -5,12 +5,15 @@ using System.Text;
 
 namespace XnaActionLibrary.TileEngine
 {
+    /// <summary>
+    /// Holds information about a tile's relation to its source tileset.
+    /// </summary>
     public class Tile
     {
         #region Fields
 
-        int tileIndex;
-        int tileset;
+        int tileIndex; // The location of the tile in the tileset.
+        int tileset; // The tileset the tile is from.
 
         #endregion
 

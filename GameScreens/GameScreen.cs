@@ -10,21 +10,32 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-namespace WindowsGame1
+namespace WindowsGame1.GameScreens
 {
     /// <summary>
-    /// This is a game component that implements IUpdateable.
+    /// This is an abstract class that all game screens will inherit from.  It provides the main methods that all screens will have access to, Show() and Hide(),
+    /// which allow the screen to enable or disable itself.  It also holds all components within the screen and updates and draws them.
     /// </summary>
     public abstract class GameScreen : Microsoft.Xna.Framework.DrawableGameComponent
     {
+        #region Fields
+
         List<GameComponent> components = new List<GameComponent>();
         protected Game game;
         protected SpriteBatch spriteBatch;
+
+        #endregion
+
+        #region Properties
 
         public List<GameComponent> Components
         {
             get { return components; }
         }
+
+        #endregion
+
+        #region Constructor
 
         public GameScreen(Game game, SpriteBatch spriteBatch)
             : base(game)
@@ -32,6 +43,10 @@ namespace WindowsGame1
             this.game = game;
             this.spriteBatch = spriteBatch;
         }
+
+        #endregion
+
+        #region Initialization
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
@@ -42,25 +57,9 @@ namespace WindowsGame1
             base.Initialize();
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-            foreach (GameComponent component in components)
-                if (component.Enabled == true)
-                    component.Update(gameTime);
-        }
+        #endregion
 
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-            foreach (GameComponent component in components)
-                if (component is DrawableGameComponent && ((DrawableGameComponent)component).Visible) 
-                    ((DrawableGameComponent)component).Draw(gameTime);
-        }
+        #region Methods
 
         // This function activates the screen so that it is visible and the user can interact with it.
         public virtual void Show()
@@ -87,5 +86,35 @@ namespace WindowsGame1
                     ((DrawableGameComponent)component).Visible = false;
             }
         }
+
+        #endregion
+
+        #region Update
+
+        /// <summary>
+        /// Allows the game component to update itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            foreach (GameComponent component in components)
+                if (component.Enabled == true)
+                    component.Update(gameTime);
+        }
+
+        #endregion
+
+        #region Draw
+
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+            foreach (GameComponent component in components)
+                if (component is DrawableGameComponent && ((DrawableGameComponent)component).Visible) 
+                    ((DrawableGameComponent)component).Draw(gameTime);
+        }
+
+        #endregion
     }
 }

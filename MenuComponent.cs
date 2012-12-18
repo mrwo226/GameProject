@@ -14,42 +14,40 @@ using XnaActionLibrary;
 namespace WindowsGame1
 {
     /// <summary>
-    /// This is a game component that implements IUpdateable.
+    /// This is a game component that holds and updates menu information.  It holds a number of menu options that the user can select, and uses the length of the
+    /// text to measure the dimensions of the menu.  It them draws the menu and text to the appropriate places on the screen.
     /// </summary>
     public class MenuComponent : Microsoft.Xna.Framework.DrawableGameComponent
     {
+        #region Fields
+
         string[] menuItems; // The array holding the menu options.
         int selectedIndex; // The option that is currently selected.
-
         Color normal = Color.White; // The default color for the text.
         Color highlight = Color.Turquoise;  // The color the text is when an option is selected.
-
         SpriteBatch spriteBatch; // Used for rendering the menu.
         SpriteFont spriteFont; // Holds data for the font used.
+        Vector2 position; // Where the menu is located on the game screen.
+        float width = 0f; // The width of the menu.
+        float height = 0f; // The height of the menu.
 
-        // Where the menu is located on the game screen.
-        Vector2 position;
+        #endregion
+
+        #region Properties
+
         public Vector2 Position
         {
             get { return position; }
             set { position = value; }
         }
-
-        // The width of the menu.
-        float width = 0f;
         public float Width
         {
             get { return width; }
         }
-
-        // The height of the menu.
-        float height = 0f;
         public float Height
         {
             get { return height; }
-        }
-
-        // Methods to get and set the selected option.  
+        }  
         public int SelectedIndex
         {
             get { return selectedIndex; }
@@ -63,6 +61,10 @@ namespace WindowsGame1
             }
         }
 
+        #endregion
+
+        #region Constructor
+
         // The constructor for the menu component.
         public MenuComponent(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont, string[] menuItems)
             : base(game)
@@ -72,6 +74,24 @@ namespace WindowsGame1
             this.menuItems = menuItems;
             MeasureMenu();
         }
+
+        #endregion
+
+
+        #region Initialization
+
+        /// <summary>
+        /// Allows the game component to perform any initialization it needs to before starting
+        /// to run.  This is where it can query for any required services and load content.
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        #endregion
+
+        #region Methods
 
         // This function determines the dimensions of the menu, namely the initial position of it's location.
         private void MeasureMenu()
@@ -114,14 +134,9 @@ namespace WindowsGame1
             
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
+        #endregion
+
+        #region Update
 
         /// <summary>
         /// Allows the game component to update itself.
@@ -146,6 +161,10 @@ namespace WindowsGame1
 
             base.Update(gameTime);
         }
+
+        #endregion
+
+        #region Draw
 
         public override void Draw(GameTime gameTime)
         {
@@ -180,5 +199,7 @@ namespace WindowsGame1
 
             }
         }
+
+        #endregion
     }
 }
