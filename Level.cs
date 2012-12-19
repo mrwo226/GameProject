@@ -22,6 +22,9 @@ namespace WindowsGame1
         SpriteBatch spriteBatch;
         Camera camera;
         ContentManager content; // A new content manager to load and unload content for the current level.
+        int levelIndex;
+        public Vector2 playerStart;
+        public Game1 game;
 
         #endregion
 
@@ -32,18 +35,25 @@ namespace WindowsGame1
             get { return content; }
         }
 
+        public int LevelIndex
+        {
+            get { return levelIndex; }
+            set { levelIndex = value; }
+        }
+
         #endregion
 
         #region Constructor
 
         // Constructs a level.  
-        public Level(IServiceProvider serviceProvider, Game1 game, Stream fileStream, SpriteBatch spriteBatch, int numLayers)
+        public Level(IServiceProvider serviceProvider, Game1 game, SpriteBatch spriteBatch, int numLayers)
         {
             this.spriteBatch = spriteBatch;
+            this.game = game;
             // Create a new content manager to load content used just by this level.
             content = new ContentManager(serviceProvider, "Content");
             LoadContent();
-            LoadTiles(fileStream, numLayers);
+            LoadTiles(numLayers);
             camera = new Camera(game.screenRectangle);
         }
 
@@ -61,6 +71,7 @@ namespace WindowsGame1
 
         public virtual List<string> readFile(Stream fileStream)
         {
+
             // Load each level from the text file line by line and ensure all the lines are the same length.
             int width;
             List<string> lines = new List<string>();
@@ -85,36 +96,42 @@ namespace WindowsGame1
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="levelIndex"></param>
-        public virtual void LoadTiles(Stream fileStream, int numLayers)
+        public virtual void LoadTiles(int numLayers)
         {
-
-           // Load the level and ensure all the lines are the same length.
-            List<string> lines = readFile(fileStream);
-
-            // The level is as wide as the number of characters in a line minus the commas, and as high as the number of lines.
-            int levelHeight = lines.Count;
-            int width = lines[0].Length / 2;
             List<MapLayer> mapLayers = new List<MapLayer>();
+            List<string> lines;
 
             // Loop through every single layer.
             for (int i = 0; i < numLayers; i++)
             {
-                // Create a new layer to assign tiles to.
+                // Load the text file that has the assigned tile positions.
+                string levelPath = string.Format("Content/Levels/{0}/{1}.txt", levelIndex, i);
+                using (Stream fileStream = TitleContainer.OpenStream(levelPath))
+                {
+                    lines = new List<string>();
+                    lines = readFile(fileStream);
+                }
+
+                // The level is as wide as the number of characters in a line minus the commas, and as high as the number of lines.
+                int levelHeight = lines.Count;
+                int width = lines[0].Length / 2;
+
+                // Create a new layer.
                 MapLayer layer = new MapLayer(width, levelHeight);
 
-                // Loop over every tile position in the file and set each tile to the layer.
-                for (int y = 0; y < layer.Height; y++)
-                {
-                    string[] tileNumbers = lines[y].Split(',');
-                    for (int x = 0; x < layer.Width; x++)
+                    // Loop over every tile position in the file and set each tile to the layer.
+                    for (int y = 0; y < layer.Height; y++)
                     {
-                        // Use the numbers from the file by converting them to integers.
-                        int tileIndex = Convert.ToInt32(tileNumbers[x]);
-                        Tile tile = new Tile(tileIndex - 1, 0);
-                        layer.SetTile(x, y, tile);
+                        string[] tileNumbers = lines[y].Split(',');
+                        for (int x = 0; x < layer.Width; x++)
+                        {
+                            // Use the numbers from the file by converting them to integers.
+                            int tileIndex = Convert.ToInt32(tileNumbers[x]);
+                            Tile tile = new Tile(tileIndex - 1, 0);
+                            layer.SetTile(x, y, tile);
+                        }
                     }
-                }
-                mapLayers.Add(layer);
+                    mapLayers.Add(layer);
             }
 
             // Create the tilemap with the tilesets and the layers.

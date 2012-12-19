@@ -12,12 +12,12 @@ namespace WindowsGame1
 {
     public class LevelOne : Level
     {
-        Tileset tileset1; //
+        Tileset tileset1; 
         Tileset tileset2;
 
         // Constructs a level.  
-        public LevelOne(IServiceProvider serviceProvider, Game1 game, Stream fileStream, SpriteBatch spriteBatch, int numLayers) 
-            : base(serviceProvider, game, fileStream, spriteBatch, numLayers)
+        public LevelOne(IServiceProvider serviceProvider, Game1 game, SpriteBatch spriteBatch, int numLayers) 
+            : base(serviceProvider, game, spriteBatch, numLayers)
         {
         }
 
@@ -36,13 +36,10 @@ namespace WindowsGame1
 
             tilesets.Add(tileset1);
             tilesets.Add(tileset2);
+            LevelIndex = 1;
+            playerStart = new Vector2(game.screenRectangle.Width / 2, game.screenRectangle.Height / 2);
 
         }
 
-        // Unloads the level content
-        public void Dispose()
-        {
-            Content.Unload();
-        }
     }
 }

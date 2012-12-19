@@ -16,6 +16,12 @@ namespace WindowsGame1
         Camera camera;
         Game game;
 
+        Texture2D playerTexture;
+        Animation normalAnimation;
+        Animation currentAnimation;
+
+        Vector2 position;
+
         #endregion
 
         #region Properties 
@@ -26,14 +32,28 @@ namespace WindowsGame1
             set { camera = value; }
         }
 
+        public Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
         #endregion
 
         #region Constructor
 
-        public Player(Game1 game)
+        public Player(Game1 game, Vector2 position)
         {
             this.game = (Game1)game;
-            camera = new Camera(game.screenRectangle);
+            Position = position;
+            LoadContent();
+        }
+
+        public void LoadContent()
+        {
+            playerTexture = game.Content.Load<Texture2D>("Sprites/Player/normalAnimation");
+            normalAnimation = new Animation(playerTexture, position, 64, 64, 4, 100, Color.White, 1f, true);
+            currentAnimation = normalAnimation;
         }
 
         #endregion
@@ -42,11 +62,12 @@ namespace WindowsGame1
 
         public void Update(GameTime gameTime)
         {
-            camera.Update(gameTime);
+            normalAnimation.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            normalAnimation.Draw(spriteBatch);
         }
 
         #endregion

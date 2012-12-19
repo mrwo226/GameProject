@@ -20,9 +20,10 @@ namespace WindowsGame1
     {
         #region Fields
 
-        Level level; // The level the player is currently on.
+        LevelOne level; // The level the player is currently on.
         int levelIndex; // The numerical representation of the current level.
         Player player;
+        Vector2 playerPosition;
         Game1 game;
 
         #endregion
@@ -35,9 +36,8 @@ namespace WindowsGame1
             // For now, set the level index as if it were a new game.
             levelIndex = 0;
             this.game = game;
-            player = new Player(game);
             LoadNextLevel();
-
+            player = new Player(game, playerPosition);
         }
 
         #endregion
@@ -53,10 +53,8 @@ namespace WindowsGame1
             if (level != null)
                 level.Dispose();
 
-            // Load the level.
-            string levelPath = string.Format("Content/Levels/{0}.txt", levelIndex);
-            using (Stream fileStream = TitleContainer.OpenStream(levelPath))
-                level = new Level(game.Services, game, fileStream, levelIndex, spriteBatch);
+            level = new LevelOne(game.Services, game, spriteBatch, 2);
+            playerPosition = level.playerStart;
         }
 
         private void ReloadCurrentLevel()
@@ -83,6 +81,7 @@ namespace WindowsGame1
         public override void Draw(GameTime gameTime)
         {
             level.Draw(spriteBatch);
+            player.Draw(gameTime, spriteBatch);
             base.Draw(gameTime);
         }
 
