@@ -28,14 +28,11 @@ namespace WindowsGame1
         {
             base.LoadContent();
 
-            tilesetTexture = Content.Load<Texture2D>("Tilesets/tileset1");
-            tileset1 = new Tileset(tilesetTexture, 8, 8, 32, 32);
-
-            tilesetTexture = Content.Load<Texture2D>("Tilesets/tileset2");
-            tileset2 = new Tileset(tilesetTexture, 8, 8, 32, 32);
+            tilesetTexture = Content.Load<Texture2D>("Tilesets/Level1Tileset1");
+            tileset1 = new Tileset(tilesetTexture, 8, 8, 64, 64);
 
             tilesets.Add(tileset1);
-            tilesets.Add(tileset2);
+
             LevelIndex = 1;
             playerStart = new Vector2(game.screenRectangle.Width / 2, game.screenRectangle.Height / 2);
 

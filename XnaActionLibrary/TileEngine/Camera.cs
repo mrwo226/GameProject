@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using XnaActionLibrary;
+using XnaActionLibrary.SpriteClasses;
 
 namespace XnaActionLibrary.TileEngine
 {
+    public enum CameraMode { Free, Follow }
+
     public class Camera
     {
         #region Fields
@@ -15,6 +19,7 @@ namespace XnaActionLibrary.TileEngine
         float speed;
         float zoom;
         Rectangle viewportRectangle;
+        CameraMode mode;
 
         #endregion
 
@@ -37,6 +42,11 @@ namespace XnaActionLibrary.TileEngine
             get { return zoom; }
         }
 
+        public CameraMode Mode
+        {
+            get { return mode; }
+        }
+
         #endregion
 
         #region Constructors
@@ -46,6 +56,7 @@ namespace XnaActionLibrary.TileEngine
             speed = 4f;
             zoom = 1f;
             this.viewportRectangle = viewportRectangle;
+            mode = CameraMode.Follow;
         }
 
         public Camera(Rectangle viewportRectangle, Vector2 position)
@@ -54,6 +65,7 @@ namespace XnaActionLibrary.TileEngine
             zoom = 1f;
             Position = position;
             this.viewportRectangle = viewportRectangle;
+            mode = CameraMode.Follow;
         }
 
         #endregion
@@ -66,12 +78,30 @@ namespace XnaActionLibrary.TileEngine
             position.Y = MathHelper.Clamp(position.Y, 0, TileMap.HeightInPixels - viewportRectangle.Height);
         }
 
+        public void LockToSprite(AnimatedSprite sprite)
+        {
+            position.X = sprite.Position.X + sprite.Width / 2 - (viewportRectangle.Width / 2);
+            position.Y = sprite.Position.Y + sprite.Height / 2 - (viewportRectangle.Height / 2);
+            LockCamera();
+        }
+
+        public void ToggleCameraMode()
+        {
+            if (mode == CameraMode.Follow)
+                mode = CameraMode.Free;
+            else if (mode == CameraMode.Free)
+                mode = CameraMode.Follow;
+        }
+
         #endregion
 
         #region Update
 
         public void Update(GameTime gameTime)
         {
+            if (mode == CameraMode.Follow)
+                return;
+
             Vector2 motion = Vector2.Zero;
 
             if (InputManager.IsActionPressed(InputManager.Action.MoveCharacterLeft))
@@ -85,11 +115,11 @@ namespace XnaActionLibrary.TileEngine
                 motion.Y = speed;
 
             if (motion != Vector2.Zero)
+            {
                 motion.Normalize();
-
-            position += motion * speed;
-
-            LockCamera();
+                position += motion * speed;
+                LockCamera();
+            }
         }
 
         #endregion

@@ -13,8 +13,8 @@ namespace XnaActionLibrary.TileEngine
     {
         #region Field Region
 
-        static int tileWidth = 32;
-        static int tileHeight = 32;
+        static int tileWidth = 64;
+        static int tileHeight = 64;
 
         #endregion
 

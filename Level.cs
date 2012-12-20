@@ -41,6 +41,11 @@ namespace WindowsGame1
             set { levelIndex = value; }
         }
 
+        public Camera Camera
+        {
+            get { return camera; }
+        }
+
         #endregion
 
         #region Constructor

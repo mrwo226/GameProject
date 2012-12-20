@@ -116,15 +116,19 @@ namespace XnaActionLibrary
 
             actionMaps[(int)Action.MoveCharacterUp] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterUp].keyboardKeys.Add(Keys.Up);
+            actionMaps[(int)Action.MoveCharacterUp].keyboardKeys.Add(Keys.W);
 
             actionMaps[(int)Action.MoveCharacterDown] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterDown].keyboardKeys.Add(Keys.Down);
+            actionMaps[(int)Action.MoveCharacterDown].keyboardKeys.Add(Keys.S);
 
             actionMaps[(int)Action.MoveCharacterLeft] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterLeft].keyboardKeys.Add(Keys.Left);
+            actionMaps[(int)Action.MoveCharacterLeft].keyboardKeys.Add(Keys.A);
 
             actionMaps[(int)Action.MoveCharacterRight] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterRight].keyboardKeys.Add(Keys.Right);
+            actionMaps[(int)Action.MoveCharacterRight].keyboardKeys.Add(Keys.D);
 
             actionMaps[(int)Action.CursorUp] = new ActionMap();
             actionMaps[(int)Action.CursorUp].keyboardKeys.Add(Keys.Up);

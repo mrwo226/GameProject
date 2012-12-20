@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.IO;
 using WindowsGame1.GameScreens;
+using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary;
 using XnaActionLibrary.TileEngine;
 
@@ -23,7 +24,7 @@ namespace WindowsGame1
         LevelOne level; // The level the player is currently on.
         int levelIndex; // The numerical representation of the current level.
         Player player;
-        Vector2 playerPosition;
+        Vector2 playerSpawn;
         Game1 game;
 
         #endregion
@@ -37,7 +38,8 @@ namespace WindowsGame1
             levelIndex = 0;
             this.game = game;
             LoadNextLevel();
-            player = new Player(game, playerPosition);
+            player = new Player(game, playerSpawn, level.Camera);
+            level.Camera.LockToSprite(player);
         }
 
         #endregion
@@ -53,8 +55,8 @@ namespace WindowsGame1
             if (level != null)
                 level.Dispose();
 
-            level = new LevelOne(game.Services, game, spriteBatch, 2);
-            playerPosition = level.playerStart;
+            level = new LevelOne(game.Services, game, spriteBatch, 1);
+            playerSpawn= level.playerStart;        
         }
 
         private void ReloadCurrentLevel()
@@ -81,7 +83,7 @@ namespace WindowsGame1
         public override void Draw(GameTime gameTime)
         {
             level.Draw(spriteBatch);
-            player.Draw(gameTime, spriteBatch);
+            player.Draw(gameTime, spriteBatch, level.Camera);
             base.Draw(gameTime);
         }
 

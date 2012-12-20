@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using WindowsGame1.GameScreens;
+using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary;
 
 namespace WindowsGame1
