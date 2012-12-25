@@ -11,7 +11,7 @@ using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary;
 using XnaActionLibrary.TileEngine;
 
-namespace WindowsGame1
+namespace WindowsGame1.GameScreens
 {
     /// <summary>
     /// This is a class that inherits from the base class GameScreen to provide the main gameplay screen for the user.  The action screen manages the levels for
@@ -39,6 +39,7 @@ namespace WindowsGame1
             this.game = game;
             LoadNextLevel();
             player = new Player(game, playerSpawn, level.Camera);
+            SpriteManager.Instance.SpriteList.Add(player);
             level.Camera.LockToSprite(player);
         }
 

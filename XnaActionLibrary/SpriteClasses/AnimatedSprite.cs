@@ -8,18 +8,22 @@ using XnaActionLibrary.TileEngine;
 
 namespace XnaActionLibrary.SpriteClasses
 {
-    public class AnimatedSprite
+    /// <summary>
+    /// This class specifies parameters that all animated sprites in the game will share.  Every sprite of this type will have the ability to move, turn, 
+    /// and animate.
+    /// </summary>
+    public abstract class AnimatedSprite
     {
         #region Fields
 
-        Animation currentAnimation;
-        public Texture2D spriteTexture;
-        Vector2 position;
-        Vector2 velocity;
-        Vector2 motion;
-        Direction orientation;
-        float rotation;
-        float speed = 2.0f;
+        Animation currentAnimation; // The current animation that is playing for the sprite.
+        public Texture2D spriteTexture; // The texture that holds the animation strip.
+        Vector2 position; // The sprite's position in the game screen.
+        Vector2 velocity; // The sprite's velocity.
+        Vector2 motion; // The vector representing the direction of the sprite's motion.
+        Direction orientation; // A cardinal direction representation of the sprite's motion.
+        float rotation; // The angle that the sprite is rotated.
+        float speed; // The speed of the sprite.
 
         #endregion
 
@@ -43,7 +47,7 @@ namespace XnaActionLibrary.SpriteClasses
         public float Speed
         {
             get { return speed; }
-            set { speed = value; }
+            set { speed = MathHelper.Clamp(value, 0.0f, 16.0f); }
         }
 
         public Vector2 Position
@@ -100,6 +104,9 @@ namespace XnaActionLibrary.SpriteClasses
 
         #region Constructor
 
+        /// <summary>
+        /// Constructs a new AnimatedSprite object.  All sprites will begin with their orientation at East.
+        /// </summary>
         public AnimatedSprite()
         {
             Orientation = Direction.East;
@@ -107,12 +114,19 @@ namespace XnaActionLibrary.SpriteClasses
 
         #endregion
 
+        /// <summary>
+        /// Keeps the sprite from moving off of the screen.
+        /// </summary>
         public virtual void LockToMap()
         {
             position.X = MathHelper.Clamp(position.X, 0 + Width / 2, TileMap.WidthInPixels - Width / 2);
             position.Y = MathHelper.Clamp(position.Y, 0 + Width / 2, TileMap.HeightInPixels - Height / 2 );
         }
 
+        /// <summary>
+        /// Changes the sprite's animation to a new strip.
+        /// </summary>
+        /// <param name="newAnimation"> The new animation the sprite should have.</param>
         public virtual void SetAnimation(Animation newAnimation)
         {
             currentAnimation.isActive = false;
@@ -120,6 +134,9 @@ namespace XnaActionLibrary.SpriteClasses
             currentAnimation.isActive = true;
         }
 
+        /// <summary>
+        /// Determines the current direction the sprite is moving in cardinal directions.
+        /// </summary>
         public virtual void determineCurrentDirection()
         {
             if (motion.X > 0)
@@ -149,6 +166,9 @@ namespace XnaActionLibrary.SpriteClasses
             }
         }
 
+        /// <summary>
+        /// Determines the current rotation of the sprite based on it's cardinal direction.  The rotation angle is specified in radians.
+        /// </summary>
         public virtual void determineRotation()
         {
             if (Orientation == Direction.North)
@@ -169,10 +189,24 @@ namespace XnaActionLibrary.SpriteClasses
                 rotation = -MathHelper.Pi / 4.0f;
         }
 
+        /// <summary>
+        /// All sprites will update their motion, cardinal direction, rotation, and animation.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public virtual void Update(GameTime gameTime)
+        {
+            determineCurrentDirection();
+            determineRotation();
+            CurrentAnimation.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Draws the animated sprite to the screen.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Camera camera)
         {
             spriteBatch.Draw(spriteTexture, position - camera.Position, currentAnimation.SourceRectangle, Color.White, rotation, Origin, 1, SpriteEffects.None, 0);
         }
-
     }
 }

@@ -9,17 +9,22 @@ using XnaActionLibrary.SpriteClasses;
 
 namespace XnaActionLibrary.TileEngine
 {
+    /// <summary>
+    /// Specifies two camera modes:
+    ///     Free: The camera can be controlled by the user.
+    ///     Follow: The camera follows the sprite.
+    /// </summary>
     public enum CameraMode { Free, Follow }
 
     public class Camera
     {
         #region Fields
 
-        Vector2 position;
-        float speed;
-        float zoom;
-        Rectangle viewportRectangle;
-        CameraMode mode;
+        Vector2 position; // The position of the camera in the game screen.
+        float speed; // The speed the camera moves at.
+        float zoom; // The level of zoom of the camera (1 is normal).
+        Rectangle viewportRectangle; // The rectangle specifying the dimensions of the game screen.
+        CameraMode mode; // Which mode the camera is in.
 
         #endregion
 
@@ -72,12 +77,19 @@ namespace XnaActionLibrary.TileEngine
 
         #region Methods
 
+        /// <summary>
+        /// Keeps the camera from going off of the edge of the screen.
+        /// </summary>
         public void LockCamera()
         {
             position.X = MathHelper.Clamp(position.X, 0, TileMap.WidthInPixels - viewportRectangle.Width);
             position.Y = MathHelper.Clamp(position.Y, 0, TileMap.HeightInPixels - viewportRectangle.Height);
         }
 
+        /// <summary>
+        /// Locks the camera to a sprite so it follows the sprite.
+        /// </summary>
+        /// <param name="sprite"></param>
         public void LockToSprite(AnimatedSprite sprite)
         {
             position.X = sprite.Position.X + sprite.Width / 2 - (viewportRectangle.Width / 2);
@@ -85,6 +97,9 @@ namespace XnaActionLibrary.TileEngine
             LockCamera();
         }
 
+        /// <summary>
+        /// Changes the camera mode from free to follow or visa versa.
+        /// </summary>
         public void ToggleCameraMode()
         {
             if (mode == CameraMode.Follow)
@@ -97,6 +112,10 @@ namespace XnaActionLibrary.TileEngine
 
         #region Update
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
             if (mode == CameraMode.Follow)

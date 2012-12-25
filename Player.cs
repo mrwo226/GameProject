@@ -78,12 +78,10 @@ namespace WindowsGame1
 
         #region Update
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             HandleInput();
-            determineCurrentDirection();
-            determineRotation();
-            CurrentAnimation.Update(gameTime);
+            base.Update(gameTime);
         }
 
         #endregion

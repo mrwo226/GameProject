@@ -31,6 +31,8 @@ namespace XnaActionLibrary.SpriteClasses
 
         #endregion
 
+        #region Constructor
+
         public Animation(Texture2D texture, Vector2 position, int frameWidth, int frameHeight, int frameCount, int frametime, Color color,
                                 float scale, bool looping)
         {
@@ -56,6 +58,10 @@ namespace XnaActionLibrary.SpriteClasses
             // Set the Animation to active by default
             isActive = true;
         }
+
+        #endregion
+
+        #region Update
 
         public void Update(GameTime gameTime)
         {
@@ -101,6 +107,8 @@ namespace XnaActionLibrary.SpriteClasses
             (int)(FrameWidth * scale),
             (int)(FrameHeight * scale));
         }
+
+        #endregion
 
     }
 }

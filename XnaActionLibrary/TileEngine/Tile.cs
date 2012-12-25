@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using XnaActionLibrary.Collisions;
 
 namespace XnaActionLibrary.TileEngine
 {
@@ -14,6 +15,7 @@ namespace XnaActionLibrary.TileEngine
 
         int tileIndex; // The location of the tile in the tileset.
         int tileset; // The tileset the tile is from.
+        CollisionType tileCollision;
 
         #endregion
 
@@ -29,6 +31,12 @@ namespace XnaActionLibrary.TileEngine
         {
             get { return tileset; }
             private set { tileset = value; }
+        }
+
+        public CollisionType TileCollision
+        {
+            get { return tileCollision; }
+            set { tileCollision = value; }
         }
 
         #endregion

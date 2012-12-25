@@ -13,7 +13,6 @@ namespace WindowsGame1
     public class LevelOne : Level
     {
         Tileset tileset1; 
-        Tileset tileset2;
 
         // Constructs a level.  
         public LevelOne(IServiceProvider serviceProvider, Game1 game, SpriteBatch spriteBatch, int numLayers) 
@@ -28,12 +27,16 @@ namespace WindowsGame1
         {
             base.LoadContent();
 
-            tilesetTexture = Content.Load<Texture2D>("Tilesets/Level1Tileset1");
-            tileset1 = new Tileset(tilesetTexture, 8, 8, 64, 64);
+            tilesetTexture = Content.Load<Texture2D>("Tilesets/SpaceStationTileset1");
+            tileset1 = new Tileset(tilesetTexture, 6, 3, 64, 64);
+
+            layerTexture = Content.Load<Texture2D>("Backgrounds/1-1");
 
             tilesets.Add(tileset1);
 
             LevelIndex = 1;
+
+            // Note: Remove playerStart here when sprite.txt is added for this level.
             playerStart = new Vector2(game.screenRectangle.Width / 2, game.screenRectangle.Height / 2);
 
         }

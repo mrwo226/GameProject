@@ -11,8 +11,8 @@ namespace XnaActionLibrary.TileEngine
     {
         #region Fields
 
-        List<Tileset> tilesets;
-        List<MapLayer> mapLayers;
+        List<Tileset> tilesets; 
+        List<MapLayer> mapLayers;  
 
         static int mapWidth;
         static int mapHeight;
@@ -49,6 +49,7 @@ namespace XnaActionLibrary.TileEngine
                     throw new Exception("Map layer size exception");
             }
         }
+
         public TileMap(Tileset tileset, MapLayer layer)
         {
             tilesets = new List<Tileset>();

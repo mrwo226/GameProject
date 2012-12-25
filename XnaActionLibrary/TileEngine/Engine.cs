@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 namespace XnaActionLibrary.TileEngine
 {
     /// <summary>
-    /// Holds information about the tiles used in the game.  The tiles are 32x32.
+    /// Holds information about the tiles used in the game.  The tiles are 64x64.
     /// </summary>
     public class Engine
     {
