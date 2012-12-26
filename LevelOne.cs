@@ -10,6 +10,9 @@ using XnaActionLibrary.TileEngine;
 
 namespace WindowsGame1
 {
+    /// <summary>
+    /// The first level in the game.
+    /// </summary>
     public class LevelOne : Level
     {
         Tileset tileset1; 
@@ -35,9 +38,6 @@ namespace WindowsGame1
             tilesets.Add(tileset1);
 
             LevelIndex = 1;
-
-            // Note: Remove playerStart here when sprite.txt is added for this level.
-            playerStart = new Vector2(game.screenRectangle.Width / 2, game.screenRectangle.Height / 2);
 
         }
 

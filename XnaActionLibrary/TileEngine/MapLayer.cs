@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using XnaActionLibrary;
 using XnaActionLibrary.Collisions;
 
 namespace XnaActionLibrary.TileEngine
@@ -40,7 +41,7 @@ namespace XnaActionLibrary.TileEngine
             {
                 for (int x = 0; x < width; x++)
                 {
-                    map[y, x] = new Tile(0, 0);
+                    map[y, x] = new Tile(0, 0, x, y);
                 }
             }
         }
@@ -61,7 +62,7 @@ namespace XnaActionLibrary.TileEngine
 
         public void SetTile(int x, int y, int tileIndex, int tileset)
         {
-            map[y, x] = new Tile(tileIndex, tileset);
+            map[y, x] = new Tile(tileIndex, tileset, x, y);
         }
 
         public void SetTileCollision(int x, int y, CollisionType collision)

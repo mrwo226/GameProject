@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using XnaActionLibrary.Collisions;
 
 namespace XnaActionLibrary.TileEngine
 {
     /// <summary>
-    /// Holds information about a tile's relation to its source tileset.
+    /// Holds information about a tile's relation to its source tileset and the game world.
     /// </summary>
     public class Tile
     {
@@ -15,7 +16,8 @@ namespace XnaActionLibrary.TileEngine
 
         int tileIndex; // The location of the tile in the tileset.
         int tileset; // The tileset the tile is from.
-        CollisionType tileCollision;
+        CollisionType tileCollision; // The type of collision the tile has.
+        Vector2 position; // The location of the tile in the game world.
 
         #endregion
 
@@ -39,14 +41,28 @@ namespace XnaActionLibrary.TileEngine
             set { tileCollision = value; }
         }
 
+        public Vector2 Position
+        {
+            get { return position; }
+            private set { position = value; }
+        }
+        
+        // A bounding rectangle used for checking collisions.
+        public Rectangle BoundingRectangle
+        {
+            get { return new Rectangle((int)position.X, (int)position.Y, Engine.TileWidth, Engine.TileHeight); }
+        }
+
         #endregion
 
         #region Constructor
 
-        public Tile(int tileIndex, int tileset)
+        public Tile(int tileIndex, int tileset, int x, int y)
         {
             TileIndex = tileIndex;
             Tileset = tileset;
+            position.X = x * Engine.TileWidth;
+            position.Y = y * Engine.TileHeight;
         }
 
         #endregion

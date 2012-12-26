@@ -138,7 +138,8 @@ namespace WindowsGame1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             
-            // Update the input.
+            // Update the input and level.
+            
             InputManager.Update();
 
             // Connects to functions that handle whichever screen is active.
@@ -172,14 +173,17 @@ namespace WindowsGame1
         // This function handles the start screen.
         private void HandleStartScreen()
         {
-            // If the user selects the first option (New Game), then the action screen is loaded.  If the second option is selected, the load game screen
-            // is activated (not yet implemented).  If the third option is selected, the game exits.
+            // If the user selects the first option (New Game), then the action screen is loaded with the first level.  If the second option is selected, 
+            //the load game screen is activated (not yet implemented).  If the third option is selected, the game exits.
             if (InputManager.IsActionTriggered(InputManager.Action.Ok))
             {
                 if (startScreen.SelectedIndex == 0)
                 {
                     activeScreen.Hide();
                     activeScreen = actionScreen;
+                    LevelManager.Instance.levelNumber = 0;
+                    LevelManager.Instance.LoadNextLevel(this, spriteBatch);
+                    SpriteManager.Instance.CreatePlayer(LevelManager.Instance.playerSpawnPosition, this, LevelManager.Instance.currentLevel.Camera);
                     activeScreen.Show();
                 }
                 //if (startScreen.SelectedIndex == 1)
@@ -238,7 +242,10 @@ namespace WindowsGame1
                 
                 // Exits to the main menu.
                 if (quitScreen.SelectedIndex == 0)
+                {
+                    SpriteManager.Instance.DeleteSprites();
                     activeScreen = startScreen;
+                }
                 // Goes back to the pause menu
                 if (quitScreen.SelectedIndex == 1)
                     activeScreen = pauseScreen;

@@ -29,6 +29,7 @@ namespace WindowsGame1
         TileMap map; // The tilemap containing the tilesets and tile layers for this level.
         public Texture2D tilesetTexture; // The tileset containing the images used for tiles.
         public Texture2D layerTexture; // Texture that holds the images for the background layers.
+        public MapLayer levelLayer;
         public List<Tileset> tilesets; // The tilesets for this level.
         int levelWidth; // The width of the level in tiles.
         int levelHeight; // The height of the level in tiles.
@@ -71,8 +72,7 @@ namespace WindowsGame1
             // Create a new content manager to load content used just by this level.
             content = new ContentManager(serviceProvider, "Content");
             LoadContent();
-            LoadTiles(numLayers);
-            //SpawnSprites();
+            LoadLevel(numLayers);
             camera = new Camera(game.screenRectangle);
         }
 
@@ -121,14 +121,34 @@ namespace WindowsGame1
         }
 
         /// <summary>
-        /// Loads the tiles, getting their position and type from a provided file created in an external tile editor. 
+        /// Loads the level from files created in an external tile editor.
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="levelIndex"></param>
-        public virtual void LoadTiles(int numLayers)
+        public virtual void LoadLevel(int numLayers)
         {
-            List<MapLayer> mapLayers = new List<MapLayer>();
-            List<string> lines;
+            List<MapLayer> mapLayers = new List<MapLayer>(); // Holds the layers for the level.
+            List<string> tilelines; // The lines of text that hold tile information.
+            List<string> collisionlines; // The lines of text that hold collision information.
+            List<string> spritelines; // The lines of text that hold sprite information.
+
+            // Load the text file that has the assigned collisions.
+            string collisionPath = string.Format("Content/Levels/{0}/collision.txt", levelIndex);
+            using (Stream fileStream = TitleContainer.OpenStream(collisionPath))
+            {
+                collisionlines = new List<string>();
+                collisionlines = readFile(fileStream);
+                fileStream.Close();
+            }
+
+            // Load the text file that has the assigned sprite positions.
+            string spritePath = string.Format("Content/Levels/{0}/sprite.txt", levelIndex);
+            using (Stream fileStream = TitleContainer.OpenStream(spritePath))
+            {
+                spritelines = new List<string>();
+                spritelines = readFile(fileStream);
+                fileStream.Close();
+            }
 
             // Loop through every single layer.
             for (int i = 0; i < numLayers; i++)
@@ -137,12 +157,13 @@ namespace WindowsGame1
                 string levelPath = string.Format("Content/Levels/{0}/{1}.txt", levelIndex, i);
                 using (Stream fileStream = TitleContainer.OpenStream(levelPath))
                 {
-                    lines = new List<string>();
-                    lines = readFile(fileStream);
+                    tilelines = new List<string>();
+                    tilelines = readFile(fileStream);
+                    fileStream.Close();
                 }
 
                 // The level is as wide as the number of elements in the line, or the number of commas, and as high as the number of lines.
-                levelHeight = lines.Count;
+                levelHeight = tilelines.Count;
 
                 // Create a new layer.
                 MapLayer layer = new MapLayer(levelWidth, levelHeight);
@@ -150,16 +171,29 @@ namespace WindowsGame1
                     // Loop over every tile position in the file and set each tile to the layer.
                     for (int y = 0; y < layer.Height; y++)
                     {
-                        string[] tileNumbers = lines[y].Split(',');
+                        string[] tileNumbers = tilelines[y].Split(',');
+                        string[] collisionNumbers = collisionlines[y].Split(',');
+                        string[] spriteNumbers = spritelines[y].Split(',');
+
                         for (int x = 0; x < layer.Width; x++)
                         {
                             // Use the numbers from the file by converting them to integers.
                             int tileIndex = Convert.ToInt32(tileNumbers[x]);
-                            Tile tile = new Tile(tileIndex - 1, i);
+                            Tile tile = new Tile(tileIndex - 1, i, x, y);
                             layer.SetTile(x, y, tile);
-                            // Set the tile collisions.
-                            //if (i == 0)
-                                //LoadCollisions(layer);   
+
+                            // Set the tile collisions and sprites only once.
+                            if (i == 0)
+                            {
+                                // Get the collision number from the file by converting it to an integer and load the collision.
+                                int collisionNum = Convert.ToInt32(collisionNumbers[x]);
+                                LoadCollisions(layer, x, y, collisionNum);
+                                
+                                // Get the sprite number from the file by converting it to an integer and load the sprite.
+                                int spriteNum = Convert.ToInt32(spriteNumbers[x]);
+                                LoadSprites(x, y, spriteNum);
+                                levelLayer = layer;
+                            }
                         }
                     }
                     mapLayers.Add(layer);
@@ -174,71 +208,33 @@ namespace WindowsGame1
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="levelIndex"></param>
-        public virtual void LoadCollisions(MapLayer layer)
+        public virtual void LoadCollisions(MapLayer layer, int x, int y, int collisionNum)
         {
-            List<string> lines;
             CollisionType collisionType;
+            if (collisionNum == 2)
+                collisionType = CollisionType.Impassable;
+            else
+                collisionType = CollisionType.Passable;
+            layer.SetTileCollision(x, y, collisionType);
 
-            // Load the text file that has the assigned collisions.
-            string levelPath = string.Format("Content/Levels/{0}/collision.txt", levelIndex);
-            using (Stream fileStream = TitleContainer.OpenStream(levelPath))
-            {
-                lines = new List<string>();
-                lines = readFile(fileStream);
-            }
-
-                // Loop over every collision number in the file and set each collision to the corresponding tile.
-                for (int y = 0; y < layer.Height; y++)
-                {
-                    string[] tileNumbers = lines[y].Split(',');
-                    for (int x = 0; x < layer.Width; x++)
-                    {
-                        // Use the numbers from the file by converting them to integers.
-                        int collisionNum = Convert.ToInt32(tileNumbers[x]);
-                        if (collisionNum == 1)
-                            collisionType = CollisionType.Impassable;
-                        else
-                            collisionType = CollisionType.Passable;
-                        layer.SetTileCollision(x, y, collisionType);       
-                    }
-                }
-            }
+        }
 
         /// <summary>
         /// Sets each sprite spawn position and sprite type by using the information in a file provided by an external tile editor.
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="levelIndex"></param>
-        public virtual void SpawnSprites()
+        public virtual void LoadSprites(int x, int y, int spriteNum)
         {
-            List<string> lines;
+            Vector2 spritePosition = new Vector2(x * Engine.TileWidth, y * Engine.TileHeight);
+            
+            // The player is instantiated at the beginning of the game, so it's starting position is merely updated for this level.
+            // The enemies for this level, however, are created here using the SpriteManager.
+            if (spriteNum == 1)
+                playerStart = spritePosition;
+            else if (spriteNum == 2)
+                SpriteManager.Instance.CreateEnemy(EnemyType.Turret, spritePosition);
 
-            // Load the text file that has the assigned spawn positions.
-            string levelPath = string.Format("Content/Levels/{0}/sprite.txt", levelIndex);
-            using (Stream fileStream = TitleContainer.OpenStream(levelPath))
-            {
-                lines = new List<string>();
-                lines = readFile(fileStream);
-                fileStream.Close();
-            }
-
-            // Loop over every spawn number in the file and set each collision to the corresponding tile.
-            for (int y = 0; y < levelHeight; y++)
-            {
-                string[] spriteNumbers = lines[y].Split(',');
-                for (int x = 0; x < levelWidth; x++)
-                {
-                    // Use the numbers from the file by converting them to integers.
-                    int spriteNum = Convert.ToInt32(spriteNumbers[x]);
-                    Vector2 spritePosition = new Vector2(x * Engine.TileWidth, y * Engine.TileHeight);
-                    // The player is instantiated at the beginning of the game, so it's starting position is merely updated for this level.
-                    // The enemies for this level, however, are created here using the SpriteManager.
-                    if (spriteNum == 1)
-                        playerStart = spritePosition;
-                    else if (spriteNum == 2)
-                        SpriteManager.Instance.CreateEnemy(EnemyType.Turret, spritePosition);
-                }
-            }
         }
     
         // Unloads the level content

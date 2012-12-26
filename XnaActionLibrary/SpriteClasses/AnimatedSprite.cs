@@ -21,9 +21,10 @@ namespace XnaActionLibrary.SpriteClasses
         Vector2 position; // The sprite's position in the game screen.
         Vector2 velocity; // The sprite's velocity.
         Vector2 motion; // The vector representing the direction of the sprite's motion.
-        Direction orientation; // A cardinal direction representation of the sprite's motion.
+        CardinalDirection orientation; // A cardinal direction representation of the sprite's motion.
         float rotation; // The angle that the sprite is rotated.
         float speed; // The speed of the sprite.
+        bool isAlive;
 
         #endregion
 
@@ -83,7 +84,7 @@ namespace XnaActionLibrary.SpriteClasses
             }
         }
 
-        public Direction Orientation
+        public CardinalDirection Orientation
         {
             get { return orientation; }
             set { orientation = value; }
@@ -100,6 +101,12 @@ namespace XnaActionLibrary.SpriteClasses
             get { return new Vector2(currentAnimation.FrameWidth / 2.0f, currentAnimation.FrameHeight / 2.0f); }
         }
 
+        // A bounding rectangle used for checking collisions.
+        public Rectangle BoundingRectangle
+        {
+            get { return new Rectangle((int)position.X - Width / 2, (int)position.Y - Height / 2, Engine.TileWidth, Engine.TileHeight); }
+        }
+
         #endregion
 
         #region Constructor
@@ -109,7 +116,7 @@ namespace XnaActionLibrary.SpriteClasses
         /// </summary>
         public AnimatedSprite()
         {
-            Orientation = Direction.East;
+            Orientation = CardinalDirection.East;
         }
 
         #endregion
@@ -135,57 +142,25 @@ namespace XnaActionLibrary.SpriteClasses
         }
 
         /// <summary>
-        /// Determines the current direction the sprite is moving in cardinal directions.
-        /// </summary>
-        public virtual void determineCurrentDirection()
-        {
-            if (motion.X > 0)
-            {
-                if (motion.Y > 0)
-                    orientation = Direction.Southeast;
-                else if (motion.Y < 0)
-                    orientation = Direction.Northeast;
-                else // y == 0
-                    orientation = Direction.East;
-            }
-            else if (motion.X < 0)
-            {
-                if (motion.Y > 0)
-                    orientation = Direction.Southwest;
-                else if (motion.Y < 0)
-                    orientation = Direction.Northwest;
-                else // y == 0
-                    orientation = Direction.West;
-            }
-            else // x == 0
-            {
-                if (motion.Y > 0)
-                    orientation = Direction.South;
-                else if (motion.Y < 0)
-                    orientation = Direction.North;
-            }
-        }
-
-        /// <summary>
         /// Determines the current rotation of the sprite based on it's cardinal direction.  The rotation angle is specified in radians.
         /// </summary>
         public virtual void determineRotation()
         {
-            if (Orientation == Direction.North)
+            if (Orientation == CardinalDirection.North)
                 rotation = -MathHelper.Pi / 2.0f;
-            if (Orientation == Direction.Northwest)
+            if (Orientation == CardinalDirection.Northwest)
                 rotation = -3 * MathHelper.Pi / 4.0f;
-            if (Orientation == Direction.West)
+            if (Orientation == CardinalDirection.West)
                 rotation = -MathHelper.Pi;
-            if (Orientation == Direction.Southwest)
+            if (Orientation == CardinalDirection.Southwest)
                 rotation = -5 * MathHelper.Pi / 4.0f;
-            if (Orientation == Direction.South)
+            if (Orientation == CardinalDirection.South)
                 rotation = -3 * MathHelper.Pi / 2.0f;
-            if (Orientation == Direction.Southeast)
+            if (Orientation == CardinalDirection.Southeast)
                 rotation = -7 * MathHelper.Pi / 4.0f;
-            if (Orientation == Direction.East)
+            if (Orientation == CardinalDirection.East)
                 rotation = 0f;
-            if (Orientation == Direction.Northeast)
+            if (Orientation == CardinalDirection.Northeast)
                 rotation = -MathHelper.Pi / 4.0f;
         }
 
@@ -195,7 +170,7 @@ namespace XnaActionLibrary.SpriteClasses
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
-            determineCurrentDirection();
+            Orientation = Direction.determineCurrentDirection(motion, Orientation);
             determineRotation();
             CurrentAnimation.Update(gameTime);
         }
