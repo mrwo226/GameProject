@@ -21,6 +21,7 @@ namespace XnaActionLibrary
             MoveCharacterDown,
             MoveCharacterLeft,
             MoveCharacterRight,
+            AttackBasicLaser,
             CursorUp,
             CursorDown,
             TotalActionCount,
@@ -37,6 +38,7 @@ namespace XnaActionLibrary
             "Move Character - Down",
             "Move Character - Left",
             "Move Character - Right",
+            "Attack - BasicLaser",
             "Move Cursor - Up",
             "Move Cursor - Down",  
         };
@@ -129,6 +131,9 @@ namespace XnaActionLibrary
             actionMaps[(int)Action.MoveCharacterRight] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterRight].keyboardKeys.Add(Keys.Right);
             actionMaps[(int)Action.MoveCharacterRight].keyboardKeys.Add(Keys.D);
+
+            actionMaps[(int)Action.AttackBasicLaser] = new ActionMap();
+            actionMaps[(int)Action.AttackBasicLaser].keyboardKeys.Add(Keys.Space);
 
             actionMaps[(int)Action.CursorUp] = new ActionMap();
             actionMaps[(int)Action.CursorUp].keyboardKeys.Add(Keys.Up);

@@ -25,6 +25,7 @@ namespace XnaActionLibrary.SpriteClasses
         float rotation; // The angle that the sprite is rotated.
         float speed; // The speed of the sprite.
         bool isAlive;
+        Vector2 weaponSpawnPosition;
 
         #endregion
 
@@ -104,7 +105,12 @@ namespace XnaActionLibrary.SpriteClasses
         // A bounding rectangle used for checking collisions.
         public Rectangle BoundingRectangle
         {
-            get { return new Rectangle((int)position.X - Width / 2, (int)position.Y - Height / 2, Engine.TileWidth, Engine.TileHeight); }
+            get { return new Rectangle((int)position.X - Width / 2, (int)position.Y - Height / 2, Width, Height); }
+        }
+
+        public Vector2 WeaponSpawnPosition
+        {
+            get { return weaponSpawnPosition; }
         }
 
         #endregion
@@ -147,21 +153,53 @@ namespace XnaActionLibrary.SpriteClasses
         public virtual void determineRotation()
         {
             if (Orientation == CardinalDirection.North)
+            {
                 rotation = -MathHelper.Pi / 2.0f;
+                weaponSpawnPosition.X = BoundingRectangle.Center.X;
+                weaponSpawnPosition.Y = BoundingRectangle.Top;
+            }
             if (Orientation == CardinalDirection.Northwest)
+            {
                 rotation = -3 * MathHelper.Pi / 4.0f;
+                weaponSpawnPosition.X = BoundingRectangle.Left;
+                weaponSpawnPosition.Y = BoundingRectangle.Top;
+            }
             if (Orientation == CardinalDirection.West)
+            {
                 rotation = -MathHelper.Pi;
+                weaponSpawnPosition.X = BoundingRectangle.Left;
+                weaponSpawnPosition.Y = BoundingRectangle.Center.Y;
+            }
             if (Orientation == CardinalDirection.Southwest)
+            {
                 rotation = -5 * MathHelper.Pi / 4.0f;
+                weaponSpawnPosition.X = BoundingRectangle.Left;
+                weaponSpawnPosition.Y = BoundingRectangle.Bottom;
+            }
             if (Orientation == CardinalDirection.South)
+            {
                 rotation = -3 * MathHelper.Pi / 2.0f;
+                weaponSpawnPosition.X = BoundingRectangle.Center.X;
+                weaponSpawnPosition.Y = BoundingRectangle.Bottom;
+            }
             if (Orientation == CardinalDirection.Southeast)
+            {
                 rotation = -7 * MathHelper.Pi / 4.0f;
+                weaponSpawnPosition.X = BoundingRectangle.Right;
+                weaponSpawnPosition.Y = BoundingRectangle.Bottom;
+            }
             if (Orientation == CardinalDirection.East)
+            {
                 rotation = 0f;
+                weaponSpawnPosition.X = BoundingRectangle.Right;
+                weaponSpawnPosition.Y = BoundingRectangle.Center.Y;
+            }
             if (Orientation == CardinalDirection.Northeast)
+            {
                 rotation = -MathHelper.Pi / 4.0f;
+                weaponSpawnPosition.X = BoundingRectangle.Right;
+                weaponSpawnPosition.Y = BoundingRectangle.Top;
+            }
         }
 
         /// <summary>

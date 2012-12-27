@@ -6,5 +6,11 @@ Content\Menus\QuitScreen.xnb
 Content\Sprites\Player\normalAnimation.xnb
 Content\Backgrounds\1-1.xnb
 Content\Tilesets\SpaceStationTileset1.xnb
+Content\Weapons\chargeLaser.xnb
+Content\Weapons\chargeLaserFullPowerLoop.xnb
+Content\Weapons\chargeLaserHalfPowerLoop.xnb
+Content\Weapons\deactivateCharge.xnb
+Content\Weapons\enemyLaser.xnb
+Content\Weapons\playersLaser.xnb
 Content\Levels\1\collision.txt
 Content\Levels\1\sprite.txt

@@ -40,6 +40,7 @@ namespace WindowsGame1.GameScreens
         {
             LevelManager.Instance.Update(gameTime);
             SpriteManager.Instance.Update(gameTime);
+            ProjectileManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -47,6 +48,7 @@ namespace WindowsGame1.GameScreens
         {
             LevelManager.Instance.currentLevel.Draw(spriteBatch);
             SpriteManager.Instance.Draw(gameTime, spriteBatch, LevelManager.Instance.currentLevel.Camera);
+            ProjectileManager.Instance.Draw(gameTime, spriteBatch, LevelManager.Instance.currentLevel.Camera);
             base.Draw(gameTime);
         }
 

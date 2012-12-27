@@ -46,7 +46,7 @@ namespace WindowsGame1
             CurrentAnimation = normalAnimation;
         }
 
-        public void HandleInput()
+        public void HandleMovementInput()
         {
             Motion = Vector2.Zero;
 
@@ -72,6 +72,13 @@ namespace WindowsGame1
             }
         }
 
+        public void HandleAttackInput()
+        {
+            if (InputManager.IsActionTriggered(InputManager.Action.AttackBasicLaser))
+                ProjectileManager.Instance.CreateProjectile(ProjectileType.BasicLaser, WeaponSpawnPosition, game);
+                
+        }
+
         #endregion
 
 
@@ -80,7 +87,8 @@ namespace WindowsGame1
 
         public override void Update(GameTime gameTime)
         {
-            HandleInput();
+            HandleMovementInput();
+            HandleAttackInput();
             base.Update(gameTime);
         }
 
