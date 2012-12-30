@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WindowsGame1.Sprites;
 
-namespace WindowsGame1
+namespace WindowsGame1.Levels
 {
     /// <summary>
     /// This class manages the levels in the game.  It is responsible for loading them and reloading them.

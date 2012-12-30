@@ -7,20 +7,25 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.IO;
 using XnaActionLibrary.TileEngine;
+using WindowsGame1.Sprites;
 
-namespace WindowsGame1
+namespace WindowsGame1.Levels
 {
     /// <summary>
     /// The first level in the game.
     /// </summary>
     public class LevelOne : Level
     {
-        Tileset tileset1; 
+        Tileset tileset1;
+        private int numEvents = 5;
 
         // Constructs a level.  
         public LevelOne(IServiceProvider serviceProvider, Game1 game, SpriteBatch spriteBatch, int numLayers) 
             : base(serviceProvider, game, spriteBatch, numLayers)
         {
+            eventList = new List<bool>();
+            for (int i = 0; i < numEvents; i++)
+                eventList.Add(false);
         }
 
         /// <summary>
@@ -39,6 +44,11 @@ namespace WindowsGame1
 
             LevelIndex = 1;
 
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);               
         }
 
     }

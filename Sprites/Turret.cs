@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using XnaActionLibrary;
 using XnaActionLibrary.SpriteClasses;
 
-namespace WindowsGame1
+namespace WindowsGame1.Sprites
 {
     public class Turret : Enemy
     {

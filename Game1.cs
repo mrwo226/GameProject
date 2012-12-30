@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Media;
 using WindowsGame1.GameScreens;
 using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary;
+using WindowsGame1.Levels;
+using WindowsGame1.Sprites;
 
 namespace WindowsGame1
 {
@@ -34,6 +36,7 @@ namespace WindowsGame1
         SplashScreen splashScreen; // The loading screen.
         PauseScreen pauseScreen; // The pause menu.
         QuitScreen quitScreen; // The message asking if the user is sure he/she wants to quit.
+        public DialogueScreen dialogueScreen; // A conversation window.
 
         public Rectangle screenRectangle;
 
@@ -109,6 +112,11 @@ namespace WindowsGame1
             Components.Add(quitScreen);
             quitScreen.Hide();
 
+            // Load the content for the dialogue screen.
+            dialogueScreen = new DialogueScreen(this, spriteBatch, Content.Load<SpriteFont>("menufont"), Content.Load<Texture2D>("Menus/DialogueScreen"), actionScreen);
+            Components.Add(dialogueScreen);
+            dialogueScreen.Hide();
+
             // When the game starts, the active screen is the start screen.
             activeScreen = startScreen;
             activeScreen.Show();
@@ -162,6 +170,10 @@ namespace WindowsGame1
             {
                 HandleQuitScreen();
             }
+            else if (activeScreen == dialogueScreen)
+            {
+                HandleDialogueScreen();
+            }
 
             base.Update(gameTime);
         }
@@ -205,6 +217,12 @@ namespace WindowsGame1
             {
                 activeScreen.Hide();
                 activeScreen = pauseScreen;
+                activeScreen.Show();
+            }
+            if (dialogueScreen.IsComplete == false)
+            {
+                activeScreen.Hide();
+                activeScreen = dialogueScreen;
                 activeScreen.Show();
             }
         }
@@ -252,6 +270,18 @@ namespace WindowsGame1
                 
                 activeScreen.Show();
             }
+        }
+
+        // This function handles the dialogue screen.
+        private void HandleDialogueScreen()
+        {
+            if (dialogueScreen.IsComplete == true)
+            {
+                activeScreen.Hide();
+                activeScreen = actionScreen;
+                activeScreen.Show();
+            }
+
         }
 
         #endregion

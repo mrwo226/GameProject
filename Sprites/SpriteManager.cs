@@ -7,8 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary.TileEngine;
 using XnaActionLibrary.Collisions;
+using WindowsGame1.Levels;
 
-namespace WindowsGame1
+namespace WindowsGame1.Sprites
 {
     /// <summary>
     /// Defines the different enemy types for the game.

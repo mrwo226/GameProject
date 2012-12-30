@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WindowsGame1.GameScreens
 {
+    /// <summary>
+    /// Loading screen for the game.
+    /// </summary>
     class SplashScreen : GameScreen
     {
         Texture2D image;

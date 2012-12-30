@@ -10,8 +10,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using XnaActionLibrary.Collisions;
 using XnaActionLibrary.SpriteClasses;
+using WindowsGame1.Sprites;
 
-namespace WindowsGame1
+namespace WindowsGame1.Levels
 {
     /// <summary>
     /// This level defines fields, properties, and methods that all levels in the game will share.  The Level class is responsible for using the implementation
@@ -38,6 +39,7 @@ namespace WindowsGame1
         ContentManager content; // A new content manager to load and unload content for the current level.
         int levelIndex; // The number of this level.  
         public Vector2 playerStart; // The starting position for the player.
+        public List<bool> eventList; // A list of booleans that keep track of whether or not events in the level have been completed.
         public Game1 game; // A reference to this game object, used in constructing the content manager.
 
         #endregion
@@ -248,7 +250,7 @@ namespace WindowsGame1
         #region Update
 
         // Updates the camera scrolling.
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             camera.Update(gameTime);
         }

@@ -10,6 +10,9 @@ using WindowsGame1.GameScreens;
 using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary;
 using XnaActionLibrary.TileEngine;
+using WindowsGame1.Levels;
+using WindowsGame1.Projectiles;
+using WindowsGame1.Sprites;
 
 namespace WindowsGame1.GameScreens
 {
@@ -17,7 +20,7 @@ namespace WindowsGame1.GameScreens
     /// This is a class that inherits from the base class GameScreen to provide the main gameplay screen for the user.  The action screen updates and draws
     /// the levels and the sprites.
     /// </summary>
-    class ActionScreen : GameScreen
+    public class ActionScreen : GameScreen
     {
         #region Fields
 

@@ -7,16 +7,20 @@ using Microsoft.Xna.Framework.Graphics;
 using XnaActionLibrary;
 using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary.TileEngine;
+using WindowsGame1.Projectiles;
 
-namespace WindowsGame1
+namespace WindowsGame1.Sprites
 {
+    /// <summary>
+    /// Defines the main character in the game controlled by the player.  
+    /// </summary>
     public class Player : AnimatedSprite
     {
         #region Fields
 
-        Game game;
-        Animation normalAnimation;
-        Camera camera;
+        Game game; // A reference to the current game type.
+        Animation normalAnimation; // The normal/idle animation for this sprite.
+        Camera camera; // A reference to the game camera.
 
         #endregion
 
@@ -46,6 +50,9 @@ namespace WindowsGame1
             CurrentAnimation = normalAnimation;
         }
 
+        /// <summary>
+        /// Handles the movement input for the sprite.
+        /// </summary>
         public void HandleMovementInput()
         {
             Motion = Vector2.Zero;
@@ -60,6 +67,7 @@ namespace WindowsGame1
             else if (InputManager.IsActionPressed(InputManager.Action.MoveCharacterDown))
                 MotionY = 1;
 
+            // Normalize the velocity for diagonal movement and update the player position.
             if (Motion != Vector2.Zero)
             {
                 Velocity = Motion * Speed;
@@ -72,16 +80,18 @@ namespace WindowsGame1
             }
         }
 
+        /// <summary>
+        /// Handles the attack input for the sprite.
+        /// </summary>
         public void HandleAttackInput()
         {
+            // Basic attack.
             if (InputManager.IsActionTriggered(InputManager.Action.AttackBasicLaser))
-                ProjectileManager.Instance.CreateProjectile(ProjectileType.BasicLaser, WeaponSpawnPosition, game);
+                ProjectileManager.Instance.CreateProjectile(ProjectileType.BasicLaser, WeaponSpawnPosition, game, ProjectileAlignment.Friendly);
                 
         }
 
         #endregion
-
-
 
         #region Update
 

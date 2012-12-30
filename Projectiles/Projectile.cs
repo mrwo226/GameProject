@@ -7,9 +7,14 @@ using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary.TileEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using WindowsGame1.Levels;
+using WindowsGame1.Sprites;
 
-namespace WindowsGame1
-{
+namespace WindowsGame1.Projectiles
+{ 
+    /// <summary>
+    /// Defines a new Projectile, an object that does damage to sprites and/or the environment in the game.
+    /// </summary>
     public abstract class Projectile
     {
         #region Fields
@@ -23,6 +28,7 @@ namespace WindowsGame1
         float speed; // The speed of the projectile.
         bool isActive; // The boolean that determines if the projectile is active or not.
         int damage; // The amount of damage the projectile does.
+        ProjectileAlignment alignment; // Does the projectile belong to friend or foe?
 
         #endregion
 
@@ -40,7 +46,7 @@ namespace WindowsGame1
         public float Speed
         {
             get { return speed; }
-            set { speed = MathHelper.Clamp(value, 0.0f, 16.0f); }
+            set { speed = MathHelper.Clamp(value, 0.0f, 20.0f); }
         }
 
         public Vector2 Position
@@ -53,16 +59,6 @@ namespace WindowsGame1
         {
             get { return motion; }
             set { motion = value; }
-        }
-        public float MotionX
-        {
-            get { return motion.X; }
-            set { motion.X = value; }
-        }
-        public float MotionY
-        {
-            get { return motion.Y; }
-            set { motion.Y = value; }
         }
 
         public Vector2 Velocity
@@ -99,6 +95,12 @@ namespace WindowsGame1
             set { isActive = value; }
         }
 
+        public ProjectileAlignment Alignment
+        {
+            get { return alignment; }
+            set { alignment = value; }
+        }
+
         // Gets a texture origin at the center of each frame
         public virtual Vector2 Origin
         {
@@ -116,11 +118,12 @@ namespace WindowsGame1
         #region Constructor
 
         /// <summary>
-        /// Constructs a new Projectile object.  All projectiles will begin with their orientation at East.
+        /// Constructs a new Projectile object.  All projectiles will begin with their orientation/rotation set at the sprite's orientation/rotation.
         /// </summary>
         public Projectile()
         {
             orientation = SpriteManager.Instance.SpriteList[0].Orientation;
+            rotation = SpriteManager.Instance.SpriteList[0].Rotation;
             IsActive = true;
         }
 
@@ -129,54 +132,46 @@ namespace WindowsGame1
         /// <summary>
         /// Determines the current rotation of the sprite based on it's cardinal direction.  The rotation angle is specified in radians.
         /// </summary>
-        public virtual void DetermineRotationAndMotion()
+        public virtual void DetermineMotion()
         {
             Motion = Vector2.Zero;
             if (Orientation == CardinalDirection.North)
             {
-                rotation = -MathHelper.Pi / 2.0f;
                 motion.X = 0;
                 motion.Y = -1;
             }
             if (Orientation == CardinalDirection.Northwest)
             {
-                rotation = -3 * MathHelper.Pi / 4.0f;
                 motion.X = -1;
                 motion.Y = -1;
             }
             if (Orientation == CardinalDirection.West)
             {
-                rotation = -MathHelper.Pi;
                 motion.X = -1;
                 motion.Y = 0;
             }
             if (Orientation == CardinalDirection.Southwest)
             {
-                rotation = -5 * MathHelper.Pi / 4.0f;
                 motion.X = -1;
                 motion.Y = 1;
             }
             if (Orientation == CardinalDirection.South)
             {
-                rotation = -3 * MathHelper.Pi / 2.0f;
                 motion.X = 0;
                 motion.Y = 1;
             }
             if (Orientation == CardinalDirection.Southeast)
             {
-                rotation = -7 * MathHelper.Pi / 4.0f;
                 motion.X = 1;
                 motion.Y = 1;
             }
             if (Orientation == CardinalDirection.East)
             {
-                rotation = 0f;
                 motion.X = 1;
                 motion.Y = 0;
             }
             if (Orientation == CardinalDirection.Northeast)
             {
-                rotation = -MathHelper.Pi / 4.0f;
                 motion.X = 1;
                 motion.Y = -1;
             }
@@ -188,7 +183,7 @@ namespace WindowsGame1
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
-            DetermineRotationAndMotion();
+            DetermineMotion();
             if (motion != Vector2.Zero)
             {
                 Velocity = Motion * Speed;
@@ -208,7 +203,7 @@ namespace WindowsGame1
         /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Camera camera)
         {
-            spriteBatch.Draw(projectileTexture, Position - camera.Position, null, Color.White, rotation, Origin, .55f, SpriteEffects.None, 0);
+            spriteBatch.Draw(projectileTexture, Position - camera.Position, null, Color.White, rotation, Origin, .50f, SpriteEffects.None, 0);
         }
     }
 }

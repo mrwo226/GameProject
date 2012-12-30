@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using XnaActionLibrary;
 
 
-namespace WindowsGame1
+namespace WindowsGame1.GameScreens
 {
     /// <summary>
     /// This is a game component that holds and updates menu information.  It holds a number of menu options that the user can select, and uses the length of the

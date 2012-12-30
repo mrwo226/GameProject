@@ -12,5 +12,6 @@ Content\Weapons\chargeLaserHalfPowerLoop.xnb
 Content\Weapons\deactivateCharge.xnb
 Content\Weapons\enemyLaser.xnb
 Content\Weapons\playersLaser.xnb
+Content\Menus\DialogueScreen.xnb
 Content\Levels\1\collision.txt
 Content\Levels\1\sprite.txt

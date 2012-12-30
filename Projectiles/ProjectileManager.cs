@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using XnaActionLibrary.SpriteClasses;
 using XnaActionLibrary.TileEngine;
 using XnaActionLibrary.Collisions;
+using WindowsGame1.Levels;
+using WindowsGame1.Sprites;
 
-namespace WindowsGame1
+namespace WindowsGame1.Projectiles
 {
     /// <summary>
     /// Defines the different projectile types for the game.
@@ -19,6 +21,16 @@ namespace WindowsGame1
         ChargedLaser,
         Bullet,
         Rocket,
+    }
+
+    /// <summary>
+    /// Defines the ownership of a projectile for determining collisions and damage.
+    /// </summary>
+    public enum ProjectileAlignment
+    {
+        Friendly,
+        Enemy,
+        Neutral,
     }
 
     /// <summary>
@@ -54,19 +66,17 @@ namespace WindowsGame1
         /// <param name="type"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public void CreateProjectile(ProjectileType type, Vector2 spawnPosition, Game game)
+        public void CreateProjectile(ProjectileType type, Vector2 spawnPosition, Game game, ProjectileAlignment alignment)
         {
             Projectile newProjectile = null;
             switch (type)
             {
                 case ProjectileType.BasicLaser:
-                    newProjectile = new BasicLaser(game, spawnPosition);
+                    newProjectile = new BasicLaser(game, spawnPosition, alignment);
                     break;
             }
 
-            Console.WriteLine(newProjectile.Position);
-            Console.WriteLine(SpriteManager.Instance.SpriteList[0].WeaponSpawnPosition);
-            Instance.ProjectileList.Add(newProjectile);
+            ProjectileList.Add(newProjectile);
             
         }
 
