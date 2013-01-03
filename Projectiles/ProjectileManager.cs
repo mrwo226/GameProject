@@ -61,7 +61,7 @@ namespace WindowsGame1.Projectiles
         #region Methods
 
         /// <summary>
-        /// Creates a new enemy for the level based on its type.  It's position is updated and then added to the list of animated sprites in the game.
+        /// Creates a new projectile for the level based on its type.  It's position is updated and then added to the list of projectiles in the game.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="position"></param>
@@ -72,9 +72,13 @@ namespace WindowsGame1.Projectiles
             switch (type)
             {
                 case ProjectileType.BasicLaser:
-                    newProjectile = new BasicLaser(game, spawnPosition, alignment);
+                    newProjectile = new BasicLaser(game, alignment);
+                    break;
+                case ProjectileType.ChargedLaser:
+                    newProjectile = new ChargedLaser(game, alignment);
                     break;
             }
+            newProjectile.Position = spawnPosition;
 
             ProjectileList.Add(newProjectile);
             

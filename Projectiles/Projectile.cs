@@ -110,7 +110,7 @@ namespace WindowsGame1.Projectiles
         // A bounding rectangle used for checking collisions.
         public Rectangle BoundingRectangle
         {
-            get { return new Rectangle((int)position.X - Width / 2, (int)position.Y - Height / 2, projectileTexture.Width, projectileTexture.Height); }
+            get { return new Rectangle((int)position.X - Width / 2, (int)position.Y - Height / 2, Width, Height); }
         }
 
         #endregion
@@ -122,60 +122,14 @@ namespace WindowsGame1.Projectiles
         /// </summary>
         public Projectile()
         {
+            // Determine the direction the projectile should move.
             orientation = SpriteManager.Instance.SpriteList[0].Orientation;
             rotation = SpriteManager.Instance.SpriteList[0].Rotation;
+            // Activate the projectile.
             IsActive = true;
         }
 
         #endregion
-
-        /// <summary>
-        /// Determines the current rotation of the sprite based on it's cardinal direction.  The rotation angle is specified in radians.
-        /// </summary>
-        public virtual void DetermineMotion()
-        {
-            Motion = Vector2.Zero;
-            if (Orientation == CardinalDirection.North)
-            {
-                motion.X = 0;
-                motion.Y = -1;
-            }
-            if (Orientation == CardinalDirection.Northwest)
-            {
-                motion.X = -1;
-                motion.Y = -1;
-            }
-            if (Orientation == CardinalDirection.West)
-            {
-                motion.X = -1;
-                motion.Y = 0;
-            }
-            if (Orientation == CardinalDirection.Southwest)
-            {
-                motion.X = -1;
-                motion.Y = 1;
-            }
-            if (Orientation == CardinalDirection.South)
-            {
-                motion.X = 0;
-                motion.Y = 1;
-            }
-            if (Orientation == CardinalDirection.Southeast)
-            {
-                motion.X = 1;
-                motion.Y = 1;
-            }
-            if (Orientation == CardinalDirection.East)
-            {
-                motion.X = 1;
-                motion.Y = 0;
-            }
-            if (Orientation == CardinalDirection.Northeast)
-            {
-                motion.X = 1;
-                motion.Y = -1;
-            }
-        }
 
         /// <summary>
         /// All projectiles will update their motion, cardinal direction, and rotation.
@@ -183,7 +137,9 @@ namespace WindowsGame1.Projectiles
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
-            DetermineMotion();
+            motion.X = (float)Math.Cos(rotation);
+            motion.Y = (float)Math.Sin(rotation);
+
             if (motion != Vector2.Zero)
             {
                 Velocity = Motion * Speed;
@@ -201,7 +157,7 @@ namespace WindowsGame1.Projectiles
         /// Draws the projectile to the screen.
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Camera camera)
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, Camera camera)
         {
             spriteBatch.Draw(projectileTexture, Position - camera.Position, null, Color.White, rotation, Origin, .50f, SpriteEffects.None, 0);
         }

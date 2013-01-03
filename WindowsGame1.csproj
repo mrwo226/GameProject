@@ -114,6 +114,7 @@
     <Compile Include="GameScreens\PauseScreen.cs" />
     <Compile Include="Levels\LevelManager.cs" />
     <Compile Include="Levels\LevelOne.cs" />
+    <Compile Include="Projectiles\ChargedLaser.cs" />
     <Compile Include="Sprites\Player.cs" />
     <Compile Include="Projectiles\Projectile.cs" />
     <Compile Include="Projectiles\ProjectileManager.cs" />

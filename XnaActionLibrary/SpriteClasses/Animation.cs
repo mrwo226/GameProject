@@ -9,12 +9,12 @@ namespace XnaActionLibrary.SpriteClasses
     {
         #region Fields
 
-        Texture2D spriteStrip; // The image representing the collection of images used for animation
+        public Texture2D spriteStrip; // The image representing the collection of images used for animation
         float scale; // The scale used to display the sprite strip
-        int elapsedTime; // The time since we last updated the frame
+        public float elapsedTime; // The time since we last updated the frame
         int frameTime; // The time we display a frame until the next one
         int frameCount; // The number of frames that the animation contains
-        int currentFrame; // The index of the current frame we are displaying
+        public int currentFrame; // The index of the current frame we are displaying
         Color color; // The color of the frame we will be displaying
         Rectangle sourceRect = new Rectangle(); // The area of the image strip we want to display
         Rectangle destinationRect = new Rectangle(); // The area where we want to display the image strip in the game

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace XnaActionLibrary 
+namespace WindowsGame1
 {
     public static class InputManager
     {
@@ -21,8 +21,6 @@ namespace XnaActionLibrary
             MoveCharacterDown,
             MoveCharacterLeft,
             MoveCharacterRight,
-            AttackBasicLaser,
-            AttackChargedLaser,
             CursorUp,
             CursorDown,
             TotalActionCount,
@@ -39,8 +37,6 @@ namespace XnaActionLibrary
             "Move Character - Down",
             "Move Character - Left",
             "Move Character - Right",
-            "Attack - BasicLaser",
-            "Attack - ChargedLaser",
             "Move Cursor - Up",
             "Move Cursor - Down",  
         };
@@ -120,33 +116,21 @@ namespace XnaActionLibrary
 
             actionMaps[(int)Action.MoveCharacterUp] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterUp].keyboardKeys.Add(Keys.Up);
-            actionMaps[(int)Action.MoveCharacterUp].keyboardKeys.Add(Keys.W);
 
             actionMaps[(int)Action.MoveCharacterDown] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterDown].keyboardKeys.Add(Keys.Down);
-            actionMaps[(int)Action.MoveCharacterDown].keyboardKeys.Add(Keys.S);
 
             actionMaps[(int)Action.MoveCharacterLeft] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterLeft].keyboardKeys.Add(Keys.Left);
-            actionMaps[(int)Action.MoveCharacterLeft].keyboardKeys.Add(Keys.A);
 
             actionMaps[(int)Action.MoveCharacterRight] = new ActionMap();
             actionMaps[(int)Action.MoveCharacterRight].keyboardKeys.Add(Keys.Right);
-            actionMaps[(int)Action.MoveCharacterRight].keyboardKeys.Add(Keys.D);
-
-            actionMaps[(int)Action.AttackBasicLaser] = new ActionMap();
-            actionMaps[(int)Action.AttackBasicLaser].keyboardKeys.Add(Keys.Space);
-
-            actionMaps[(int)Action.AttackChargedLaser] = new ActionMap();
-            actionMaps[(int)Action.AttackChargedLaser].keyboardKeys.Add(Keys.C);
 
             actionMaps[(int)Action.CursorUp] = new ActionMap();
             actionMaps[(int)Action.CursorUp].keyboardKeys.Add(Keys.Up);
-            actionMaps[(int)Action.CursorUp].keyboardKeys.Add(Keys.Left);
 
             actionMaps[(int)Action.CursorDown] = new ActionMap();
             actionMaps[(int)Action.CursorDown].keyboardKeys.Add(Keys.Down);
-            actionMaps[(int)Action.CursorDown].keyboardKeys.Add(Keys.Right);
         }
 
         // Check if an action has been pressed.

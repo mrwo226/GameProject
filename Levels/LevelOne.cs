@@ -40,6 +40,9 @@ namespace WindowsGame1.Levels
 
             layerTexture = Content.Load<Texture2D>("Backgrounds/1-1");
 
+            string[] sampleConvo = { "Text 1", "Text 2", "Finished." };
+            game.dialogueScreen.ConversationItems = sampleConvo;
+
             tilesets.Add(tileset1);
 
             LevelIndex = 1;

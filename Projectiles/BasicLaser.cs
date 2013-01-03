@@ -14,10 +14,9 @@ namespace WindowsGame1.Projectiles
     {
         Game game;
 
-        public BasicLaser(Game game, Vector2 position, ProjectileAlignment alignment) : base()
+        public BasicLaser(Game game, ProjectileAlignment alignment) : base()
         {
             this.game = (Game1)game;
-            Position = position;
             Speed = 15f;
             Alignment = alignment;
             LoadContent();

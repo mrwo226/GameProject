@@ -87,8 +87,10 @@ namespace WindowsGame1.Sprites
         {
             // Basic attack.
             if (InputManager.IsActionTriggered(InputManager.Action.AttackBasicLaser))
-                ProjectileManager.Instance.CreateProjectile(ProjectileType.BasicLaser, WeaponSpawnPosition, game, ProjectileAlignment.Friendly);
-                
+                ProjectileManager.Instance.CreateProjectile(ProjectileType.BasicLaser, WeaponSpawnPosition, game, ProjectileAlignment.Enemy);   
+            // Begin charging laser.
+            if (InputManager.IsActionTriggered(InputManager.Action.AttackChargedLaser))
+                ProjectileManager.Instance.CreateProjectile(ProjectileType.ChargedLaser, WeaponSpawnPosition, game, ProjectileAlignment.Friendly);
         }
 
         #endregion
